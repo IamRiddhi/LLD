@@ -1,20 +1,19 @@
 package ratelimitter;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 public class Driver {
 
 	public static void main(String[] args) {
-		RateLimitterService.registerService(1, new TokenBucketAlgorithm(0, 3));
 		
-		ExecutorService executors = Executors.newFixedThreadPool(10);
+		RateLimitterService rateLimitterService = new RateLimitterService();
+		for(int i = 1 ; i <= 2 ; i ++)
+			rateLimitterService.allowAccess("123", "Service1", 3);
 		
-		for(int i = 0 ; i < 10 ; i ++) {
-			executors.execute(() -> RateLimitterService.accessService(1, 2));
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
-		
-		executors.shutdown();
+		rateLimitterService.allowAccess("123", "Service1", 3);
 	}
 
 }
